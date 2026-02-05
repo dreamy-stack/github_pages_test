@@ -1,54 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cheese Celebration</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>AI Bot Game: Number Duel</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    .bot { margin: 10px; }
+    .result { font-weight: bold; }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to Your Cheese Celebration!</h1>
-    <p>Celebrate in style with curated cheese options and tips!</p>
-  </header>
+  <h1>AI Bot Game: Number Duel</h1>
+  <p>Bots compete to guess the closest number to the random target!</p>
+  <div id="game">
+    <button onclick="startGame()">Start Game</button>
+    <div id="results"></div>
+  </div>
 
-  <section>
-    <h2>Where to Buy Cheese</h2>
-    <ul>
-      <li><strong>Leo's Heidelberg</strong> - Gourmet cheese options. Address: 133–137 Burgundy Street, Heidelberg.</li>
-      <li><strong>George Eats Recommendations</strong> - Vegetarian cheese guide. <a href="https://georgeats.com/posts/resources/vegetarian-cheese-in-australia" target="_blank">Link</a></li>
-      <li><strong>Maxi Foods Supermarket</strong> - Specialty cheeses. Location: Ferntree Plaza, Upper Ferntree Gully.</li>
-    </ul>
-  </section>
+  <script>
+    const bots = ["Bot A", "Bot B", "Bot C"];
 
-  <section>
-    <h2>Cheese Selection and Quantities</h2>
-    <p>Perfect quantities for two:</p>
-    <ul>
-      <li>Soft Cheese: Brie or Camembert (~200g, Milawa Cheese Company)</li>
-      <li>Firm Cheese: Mungalli Creek Cheddar (~250g)</li>
-      <li>Specialty Cheese: Goat cheese from Meredith Dairy (~150g tub)</li>
-      <li>Blue Cheese: Small wedge (~100g)</li>
-    </ul>
-  </section>
+    function getRandomNumber() {
+        return Math.floor(Math.random() * 100);
+    }
 
-  <section>
-    <h2>Pairings</h2>
-    <p>Enhance the cheese platter with:</p>
-    <ul>
-      <li>Artisanal crackers or sourdough bread (~150–200g)</li>
-      <li>Fresh fruits (grapes, figs, pears) (~300g mixed)</li>
-      <li>Nuts: Walnuts or roasted almonds (~50g)</li>
-      <li>Honey or chutney (~100g jar)</li>
-    </ul>
-  </section>
+    function startGame() {
+        const target = getRandomNumber();
+        const guesses = bots.map(bot => ({ bot, guess: getRandomNumber() }));
 
-  <section>
-    <h2>Preparation Tips</h2>
-    <ul>
-      <li>Let cheese reach room temperature for flavor.</li>
-      <li>Pair with white wine (Chardonnay, Sauvignon Blanc) for soft cheeses or red wine (Shiraz) for firm cheeses.</li>
-      <li>Arrange on rustic platters with accents.</li>
-      <li>Light candles for ambiance.</li>
-    </ul>
-  </section>
+        let closestBot = { bot: null, difference: Infinity };
+        guesses.forEach(({ bot, guess }) => {
+            const diff = Math.abs(target - guess);
+            if (diff < closestBot.difference) {
+                closestBot = { bot, difference: diff, guess };
+            }
+        });
+
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = `<p>Target Number: ${target}</p>`;
+        guesses.forEach(({ bot, guess }) => {
+            resultsDiv.innerHTML += `<div class='bot'>${bot}: Guessed ${guess}</div>`;
+        });
+        resultsDiv.innerHTML += `<p class='result'>Winner: ${closestBot.bot} (Closest Guess: ${closestBot.guess})</p>`;
+    }
+  </script>
 </body>
 </html>
