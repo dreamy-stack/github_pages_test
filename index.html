@@ -1,47 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI Bot Game: Number Duel</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-    .bot { margin: 10px; }
-    .result { font-weight: bold; }
-  </style>
+  <title>Projects Home</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>AI Bot Game: Number Duel</h1>
-  <p>Bots compete to guess the closest number to the random target!</p>
-  <div id="game">
-    <button onclick="startGame()">Start Game</button>
-    <div id="results"></div>
-  </div>
+  <header>
+    <h1>Welcome to My Projects</h1>
+  </header>
+
+  <section>
+    <h2>Explore the Pages</h2>
+    <ul id="dynamic-list"></ul>
+  </section>
 
   <script>
-    const bots = ["Bot A", "Bot B", "Bot C"];
-
-    function getRandomNumber() {
-        return Math.floor(Math.random() * 100);
-    }
-
-    function startGame() {
-        const target = getRandomNumber();
-        const guesses = bots.map(bot => ({ bot, guess: getRandomNumber() }));
-
-        let closestBot = { bot: null, difference: Infinity };
-        guesses.forEach(({ bot, guess }) => {
-            const diff = Math.abs(target - guess);
-            if (diff < closestBot.difference) {
-                closestBot = { bot, difference: diff, guess };
-            }
+    fetch('./pages.json')
+      .then(response => response.json())
+      .then(pages => {
+        const list = document.getElementById('dynamic-list');
+        pages.forEach(page => {
+          const listItem = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = page.url;
+          link.textContent = page.name;
+          listItem.appendChild(link);
+          list.appendChild(listItem);
         });
-
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = `<p>Target Number: ${target}</p>`;
-        guesses.forEach(({ bot, guess }) => {
-            resultsDiv.innerHTML += `<div class='bot'>${bot}: Guessed ${guess}</div>`;
-        });
-        resultsDiv.innerHTML += `<p class='result'>Winner: ${closestBot.bot} (Closest Guess: ${closestBot.guess})</p>`;
-    }
+      });
   </script>
 </body>
 </html>
